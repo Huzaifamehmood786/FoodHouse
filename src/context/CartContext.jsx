@@ -5,7 +5,7 @@ const CartContext = createContext();
 export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
 
-  // ➕ ADD ITEM
+ 
   const addToCart = (item) => {
     setCart((prev) => {
       const found = prev.find((p) => p.id === item.id);
@@ -20,7 +20,17 @@ export function CartProvider({ children }) {
     });
   };
 
-  // ➖ REMOVE ITEM
+  const increaseQty = (id) => {
+    setCart((prev) =>
+      prev.map((item) =>
+        item.id === id
+          ? { ...item, qty: item.qty + 1 }
+          : item
+      )
+    );
+  };
+
+  
   const decreaseQty = (id) => {
     setCart((prev) =>
       prev
@@ -31,12 +41,12 @@ export function CartProvider({ children }) {
     );
   };
 
-  // 🗑 REMOVE FULL ITEM
+ 
   const removeItem = (id) => {
     setCart((prev) => prev.filter((item) => item.id !== id));
   };
 
-  // 🧠 TOTAL PRICE
+ 
   const total = cart.reduce(
     (sum, item) => sum + item.price * item.qty,
     0
@@ -44,7 +54,14 @@ export function CartProvider({ children }) {
 
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, decreaseQty, removeItem, total }}
+      value={{
+        cart,
+        addToCart,
+        increaseQty, 
+        decreaseQty,
+        removeItem,
+        total
+      }}
     >
       {children}
     </CartContext.Provider>
